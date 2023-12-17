@@ -4,11 +4,13 @@ import numpy as np
 shape = [2,4,4,1] #4
 class NeuralNetwork:
     def __init__(self,shape):
+        self.fitness =0
         Layers = []
         for i in range(1,len(shape)-1):#vai até o penultimo tamanho
             Layers.append(Layer(shape[i-1], shape[i]))
         Layers.append(Layer(shape[len(shape)-2], 1))
         self.Layers = Layers
+
     def printNN(self):
         for layer in self.Layers:
             print(layer.weights)
@@ -42,6 +44,6 @@ class Layer:
 
 
 
-NN = NeuralNetwork([2,4,4,1])
-X = [500,350]
-print((NN.feedforward(X)))
+#NN = NeuralNetwork([2,4,4,1])
+#X = [500,350]
+#print((NN.feedforward(X)))
