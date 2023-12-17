@@ -1,9 +1,7 @@
 import numpy as np
 
-
-shape = [2,4,4,1] #4
 class NeuralNetwork:
-    def __init__(self,shape):
+    def __init__(self,shape=None):
         self.fitness =0
         Layers = []
         for i in range(1,len(shape)-1):#vai até o penultimo tamanho
@@ -31,11 +29,12 @@ class NeuralNetwork:
         
 
 class Layer:
-    def __init__(self,nInput,nNeurons):
-        self.weights = 0.2 * np.random.randn(nInput,nNeurons)
-        self.biases = 0.2 * np.random.randn(1,nNeurons)
+    def __init__(self,nInput=None,nNeurons=None):
+        if(nInput==None or nNeurons==None): return
+        self.weights = np.array(0.2 * np.random.randn(nNeurons,nInput))
+        self.biases = np.array(0.2 * np.random.randn(1,nNeurons))
     def foward(self, input):
-        self.output = np.dot(input,self.weights) + self.biases
+        self.output = np.dot(input,self.weights.T) + self.biases
 
     def reLU(self,values):
         self.result = np.maximum(0,values)
@@ -43,7 +42,3 @@ class Layer:
         self.result = (1 / (1 + np.exp(-values)))
 
 
-
-#NN = NeuralNetwork([2,4,4,1])
-#X = [500,350]
-#print((NN.feedforward(X)))
