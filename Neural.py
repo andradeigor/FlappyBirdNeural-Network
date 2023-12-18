@@ -37,8 +37,8 @@ class Layer:
         self.output = np.dot(input,self.weights.T) + self.biases
 
     def reLU(self,values):
-        self.result = np.maximum(0,values)
+        self.result = np.tanh(values)
     def sigmoid(self,values):
-        self.result = (1 / (1 + np.exp(-values)))
+        self.result = np.tanh(values)
 
 
