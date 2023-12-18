@@ -13,25 +13,7 @@ class Genetic:
         for i in range(1,len(shape)):
             self.totalWeights+= shape[i-1]*shape[i]
         
-    
-    def evaluete(self, inputs):
-        for NN in self.populationList:
-            for input in inputs:
-                prediction = NN.feedforward(input)
-                if(prediction>0.5):
-                    if(input[0] > 200):
-                        NN.fitness+=1
-                    if(input[1] < 200):
-                        NN.fitness+=1
-                    if(input[0]>200 and input[1] < 200):
-                        NN.fitness+=5
-                else:
-                    if(input[0] < 200):
-                        NN.fitness+=1
-                    if(input[1] > 200):
-                        NN.fitness+=1
-                    if(input[0]<200 and input[1] > 200):
-                        NN.fitness+=5
+
 
     def selection(self):
         populationOrderByFitness = sorted(self.populationList, key=lambda x: x.fitness, reverse=True)
