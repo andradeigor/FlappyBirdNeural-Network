@@ -18,12 +18,7 @@ class NeuralNetwork:
         for i in range(len(self.Layers)):
             currentLayer = self.Layers[i]
             currentLayer.foward(currentInput)
-
-            if(i!= (len(self.Layers)-1)):
-                currentLayer.reLU(currentLayer.output)
-            else:
-                currentLayer.sigmoid(currentLayer.output)
-
+            currentLayer.tanh(currentLayer.output)
             currentInput = currentLayer.result
         return sum(currentInput)
         
@@ -36,9 +31,8 @@ class Layer:
     def foward(self, input):
         self.output = np.dot(input,self.weights.T) + self.biases
 
-    def reLU(self,values):
+    def tanh(self,values):
         self.result = np.tanh(values)
-    def sigmoid(self,values):
-        self.result = np.tanh(values)
+
 
 
