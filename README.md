@@ -64,21 +64,21 @@ Por fim, essa população nova é avaliada e o ciclo se repete, como ilustra bem
 
 ## 💻 Implementação:
 
+## 🧠 Redes Neurais
+
 Nosso objetivo é implementar uma rede neural que é treinada com base no algoritmo genético, o inicio do projeto foi implementar as operações básicas da rede neural. Para atingir esse objetivo, começou-se implementando um objeto inicial chamado de Layer que representa uma camada inteira da rede neural, com $n$ neurônios e realiza a operação de passar os dados por por eles.
 
 Para isso, representamos essa camada como uma matriz $w_{nxm}$, onde $n$ é o número de neurônios e $m$ é o número de pesos que cada neurônio possui, que coincide com o número de neurônios presentes na camada anterior.
 
-Assim, dado um vetor $i_{1xm}$ : $[i_1,i_2,...,i_m]$ que contêm o input dessa camada, podemos realizar os cálculos dessa camada como:
+Assim, dado um vetor $i_{1xm}$:$[i_1,i_2,...,i_m]$ que contêm o input dessa camada, podemos realizar os cálculos dessa camada como:
 
 $$resultado = i_{1xm}.w_{nxm}^T = $$
-
 $$[\sum_{j=1}^m a_{1}.w_{1j},\sum_{j=1}^m a_{2}.w_{2j},...,\sum_{j=1}^m a_{m}.w_{mj}]$$
 
 Agora, para que essa operação resulte nos cálculos que cada camada precisa fazer, basta somarmos um vetor $b_{1xm}$ que possui as biases de cada neurônio:
 
 $$resultado = i_{1xm}.w_{nxm}^T + b_{1xm} =$$
-
-$$[\sum_{j=1}^m a_{1}.w_{1j} + b_{1},\sum_{j=1}^m a_{2}.w_{2j} + b_{2},...,\sum_{j=1}^m a_{m}.w_{mj} + b_{m}]$$
+$$ [\sum_{j=1}^m a_{1}.w_{1j} + b_{1},\sum_{j=1}^m a_{2}.w_{2j} + b_{2},...,\sum_{j=1}^m a_{m}.w_{mj} + b_{m}]$$
 
 Esse método foi implementado no objeto chamado de Layer da seguinte forma:
 
@@ -104,6 +104,42 @@ class Layer:
 ```
 
 Com basse nessa classe e uma outra classe de Rede Neural que é capaz de criar várias camadas e fazer o cálculo para cada uma delas, foi possível implementar completamente a rede neural.
+
+## 🧬 Algoritmo Genético
+
+A parte do algoritmo genético foi implementada por meio de uma classe Genetic que é responsável por criar $n$ redes neurais com um numero $m$ de chance de mutação e um numero $p$ de pais para gerar as novas gerações.
+
+Durante a execução do programa, uma pontuação é atribuida para cada um dos indivíduos da população e ao final eles são selecionados por uma função que pega os dois melhores.
+
+```python
+ def selection(self):
+        populationOrderByFitness = sorted(self.populationList,
+        key=lambda x: x.fitness, reverse=True)
+
+        selected = []
+        for i in range(self.parentsNumber):
+            selected.append(populationOrderByFitness[i])
+
+        return selected
+```
+
+Após isso, uma função que gera os novos indivíduos é chamada, essa função escolhe dois valores inteiros aleatórios. O primeiro, entre 1 e o número total de pesos, o segundo entre 1 e o número total de biases. Após isso, fazemos uma mistura do primeiro pai até esses números, mais os valores desse número até o total do segundo pai. Assim, ocorre uma mistura dos genes dos melhores colocados na nova geração.
+
+Quando essa nova população é gerada, uma função de mutação é chamada e ela pode ou não mudar cada um dos pesos dos indivíduos dependendo da chance de mutação passada na construção do objeto.
+
+```python
+def mutate(self):
+    for NNIndex in range(len(self.populationList)):
+        for layerIndex in
+        range(len(self.populationList[NNIndex].Layers)):
+            for lineIndex in range(len(self.populationList[NNIndex].Layers[layerIndex].weights)):
+                for item in range(len(self.populationList[NNIndex].Layers[layerIndex].weights[lineIndex])):
+                    if(np.random.rand()< self.mutationRate):
+                        self.populationList[NNIndex].Layers[layerIndex].weights[lineIndex][item] = 0.2 * np.random.randn()
+
+```
+
+Após isso, essa nova geração é avaliada e esse processo se repete.
 
 ## 📜 Demonstração:
 
