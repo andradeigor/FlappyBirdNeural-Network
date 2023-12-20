@@ -68,15 +68,15 @@ Nosso objetivo é implementar uma rede neural que é treinada com base no algori
 
 Para isso, representamos essa camada como uma matriz $w_{nxm}$, onde $n$ é o número de neurônios e $m$ é o número de pesos que cada neurônio possui, que coincide com o número de neurônios presentes na camada anterior.
 
-Assim, dado um vetor $i_{1xm}$:$[i_1,i_2,...,i_m]$ que contêm o input dessa camada, podemos realizar os cálculos dessa camada como:
+Assim, dado um vetor $i_{1xm}$ : $[i_1,i_2,...,i_m]$ que contêm o input dessa camada, podemos realizar os cálculos dessa camada como:
 
-$$resultado = i_{1xm}.w_{nxm}^T = $$
-$$[\sum_{j=1}^m a_{1}.w_{1j},\sum_{j=1}^m a_{2}.w_{2j},...,\sum_{j=1}^m a_{m}.w_{mj}]$$
+$$resultado = i_{1xm}.w_{nxm}^T = 
+[\sum_{j=1}^m a_{1}.w_{1j},\sum_{j=1}^m a_{2}.w_{2j},...,\sum_{j=1}^m a_{m}.w_{mj}]$$
 
 Agora, para que essa operação resulte nos cálculos que cada camada precisa fazer, basta somarmos um vetor $b_{1xm}$ que possui as biases de cada neurônio:
 
-$$resultado = i_{1xm}.w_{nxm}^T + b_{1xm} =$$
-$$ [\sum_{j=1}^m a_{1}.w_{1j} + b_{1},\sum_{j=1}^m a_{2}.w_{2j} + b_{2},...,\sum_{j=1}^m a_{m}.w_{mj} + b_{m}]$$
+$$resultado = i_{1xm}.w_{nxm}^T + b_{1xm} =
+[\sum_{j=1}^m a_{1}.w_{1j} + b_{1},\sum_{j=1}^m a_{2}.w_{2j} + b_{2},...,\sum_{j=1}^m a_{m}.w_{mj} + b_{m}]$$
 
 Esse método foi implementado no objeto chamado de Layer da seguinte forma:
 
