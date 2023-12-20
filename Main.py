@@ -132,7 +132,7 @@ def main():
                         reset(keyboard)
                         break
                     if(canoLocalizado and canoValueTop < birdValue and canoValueTop + 60 > birdValue):
-                        NN.fitness+=5
+                        NN.fitness+=1
                     NNInput = [birdValue, canoValueTop,canoValueTop+60]
                     prediction = NN.feedforward(NNInput)
                     if(prediction > 0.5):
