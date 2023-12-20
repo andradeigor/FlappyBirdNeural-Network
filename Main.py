@@ -60,7 +60,7 @@ def isRunning(screen,gameOver):
         return screen,game
     return screen,game
 
-def writeInfos(screen, generation, fitness,index):
+def writeInfos(screen, generation, fitness,index, bestScore):
     cv2.putText(screen,f"Generation:{generation}", 
     (20,20), 
     font, 
@@ -82,6 +82,13 @@ def writeInfos(screen, generation, fitness,index):
     fontColor,
     thickness,
     lineType)
+    cv2.putText(screen,f"Best Score:{bestScore:.2f}", 
+    (20,80), 
+    font, 
+    fontScale,
+    fontColor,
+    thickness,
+    lineType)
     
     return screen
 
@@ -96,6 +103,7 @@ def main():
     clock = pygame.time.Clock()
     g = Genetic(30,0.01,[3,4,1],2)
     generation = 1
+    bestScore = 0
     for i in range(3):
         print(f"{3-(i)}...")
         time.sleep(1)
@@ -112,7 +120,7 @@ def main():
                     screen,canoLocation = findCano(screen, cano)
                     screen,birdLocation = findBird(screen)
                     screen, running = isRunning(screen,gameOver) 
-                    screen = writeInfos(screen,generation, NN.fitness, index)
+                    screen = writeInfos(screen,generation, NN.fitness, index, bestScore)
                     
                     canoLocalizado = False
                     try:
@@ -138,6 +146,7 @@ def main():
                     if(prediction > 0.5):
                         jump(keyboard)
                     NN.fitness+=0.1
+                    bestScore = NN.fitness if NN.fitness>bestScore else bestScore
 
                     
         g.evolve()
