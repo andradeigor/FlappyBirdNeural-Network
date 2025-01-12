@@ -1,15 +1,14 @@
 import numpy as np
 
 class NeuralNetwork:
-    def __init__(self,shape=None):
-        self.fitness =0
-        Layers = []
-        for i in range(1,len(shape)-1):#vai até o penultimo tamanho
-            Layers.append(Layer(shape[i-1], shape[i]))
-        Layers.append(Layer(shape[len(shape)-2], shape[-1]))
-        self.Layers = Layers
+    def __init__(self,shape,lowBound, highBound):
+        self.fitness = 0
+        self.Layers = [
+            Layer(shape[i], shape[i + 1], lowBound, highBound) 
+            for i in range(len(shape) - 1)
+        ]
 
-    def printNN(self):
+    def summary(self):
         for index,layer in enumerate(self.Layers):
             print(f'Printando a Layer {index}')
             layer.printLayer()
@@ -19,24 +18,28 @@ class NeuralNetwork:
         currentInput = input
         for i in range(len(self.Layers)):
             currentLayer = self.Layers[i]
-            currentLayer.foward(currentInput)
+            currentLayer.forward(currentInput)
             currentLayer.tanh(currentLayer.output)
             currentInput = currentLayer.result
+        #print(currentInput)
         return sum(currentInput)
         
 
 class Layer:
-    def __init__(self,nInput=None,nNeurons=None):
-        if(nInput==None or nNeurons==None): return
-        self.weights = np.array(0.5 * np.random.randn(nNeurons,nInput))
-        self.biases = np.array(0.2 * np.random.randn(1,nNeurons))
-    def foward(self, input):
-        self.output = np.dot(input,self.weights.T) + self.biases
+    def __init__(self,nInput,nNeurons,lowBound,highBound):
+        self.weights = np.random.uniform(low=lowBound, high=highBound, size=(nNeurons, nInput))
+        self.biases = np.random.uniform(low=lowBound, high=highBound, size=(1, nNeurons))
+        self.output = None
+    def forward(self, input):
+        self.output = np.dot(input, self.weights.T) + self.biases
 
     def tanh(self,values):
         self.result = np.tanh(values)
+    
     def printLayer(self):
         print(f"Layer Weights:")
         print(self.weights)
         print(f"Layer Biases:")
         print(self.biases)
+
+

@@ -3,10 +3,12 @@ from random import choices
 import numpy as np
 
 class Genetic:
-    def __init__(self,population,mutationRate,shape,parentsNumber):
+    def __init__(self,population,mutationRate,shape,parentsNumber,lowBound, highBound):
         self.shape = shape
+        self.lowBound = lowBound
+        self.highBound =  highBound
         self.mutationRate = mutationRate
-        self.populationList = [NeuralNetwork(shape) for x in range(population)]
+        self.populationList = [NeuralNetwork(shape,lowBound,highBound) for x in range(population)]
         self.parentsNumber = parentsNumber
         
 
@@ -20,19 +22,19 @@ class Genetic:
 
 
     def crossOver(self, selected):
-        newPopulation = [NeuralNetwork(self.shape) for x in range(len(self.populationList))]
+        newPopulation = [NeuralNetwork(self.shape,self.lowBound, self.highBound) for x in range(len(self.populationList))]
         for NNIndex in range(len(self.populationList)):
             for layerIndex in range(len(self.populationList[NNIndex].Layers)):
                 for biasesIndex in range(len(self.populationList[NNIndex].Layers[layerIndex].biases)):
                     for item in range(len(self.populationList[NNIndex].Layers[layerIndex].biases[biasesIndex])):
-                        baseIndex = np.random.randint(0,self.parentsNumber+1)
+                        baseIndex = np.random.randint(0,self.parentsNumber)
                         newPopulation[NNIndex].Layers[layerIndex].biases[biasesIndex][item] = selected[baseIndex].Layers[layerIndex].biases[biasesIndex][item]
                     
 
                 for weightIndex in range(len(self.populationList[NNIndex].Layers[layerIndex].weights)):
                     for item in range(len(self.populationList[NNIndex].Layers[layerIndex].weights[weightIndex])):
-                        baseIndex = np.random.randint(0,self.parentsNumber+1)
-                        
+                        baseIndex = np.random.randint(0,self.parentsNumber)
+                  
                         newPopulation[NNIndex].Layers[layerIndex].weights[weightIndex][item] = selected[baseIndex].Layers[layerIndex].weights[weightIndex][item]
                         
         return newPopulation
