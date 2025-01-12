@@ -3,7 +3,7 @@ from mss import mss
 from Genetic import Genetic
 import cv2
 import numpy as np
-from pynput.keyboard import Key, Controller
+from pynput.keyboard import Key, Controller, Listener
 import pygame
 import time
 
@@ -12,6 +12,7 @@ fontScale = 0.5
 fontColor = (255,255,255)
 thickness = 1
 lineType  = 2
+
 
 def jump(keyboard):
     keyboard.press(Key.space)
@@ -30,8 +31,6 @@ def findCano(screen, cano):
     for i in zip(*local_cord[::-1]):
         cv2.rectangle(screen, i, (i[0] + 50, i[1] + 40), (0,0,255),2)
     return screen, local_cord[::-1]
-
-
 
 
 def findBird(screen):# [103,203,248] = BGR
@@ -68,7 +67,7 @@ def writeInfos(screen, generation, fitness,index, bestScore):
     fontColor,
     thickness,
     lineType)
-    cv2.putText(screen,f"Rede:{index+1}", 
+    cv2.putText(screen,f"Individuo:{index+1}", 
     (20,40), 
     font, 
     fontScale,
@@ -91,7 +90,16 @@ def writeInfos(screen, generation, fitness,index, bestScore):
     lineType)
     
     return screen
+ 
+shouldReset = False
+def onPress(key):
+    global shouldReset
+    if(key == Key.caps_lock):
+        print(f"Resetando...")
+        shouldReset = not shouldReset
 
+listener = Listener(on_press=onPress)
+listener.start()
 
 def main():
     gameOver = cv2.imread('templates/gameover.png')
@@ -101,9 +109,11 @@ def main():
     keyboard = Controller()
     
     clock = pygame.time.Clock()
-    g = Genetic(30,0.01,[3,4,1],2)
+    g = Genetic(30,0.05,[2,3,1],2)
     generation = 1
+
     bestScore = 0
+   
     for i in range(3):
         print(f"{3-(i)}...")
         time.sleep(1)
@@ -111,6 +121,7 @@ def main():
         run = True
         for index,NN in enumerate(g.populationList):
             time.sleep(0.15)
+            global shouldReset
             while run:    
                 clock.tick(30)
                 with mss() as sct:
@@ -123,32 +134,45 @@ def main():
                     screen = writeInfos(screen,generation, NN.fitness, index, bestScore)
                     
                     canoLocalizado = False
+                    birdLozalizado = False
                     try:
-                        canoValueTop = canoLocation[1][0]+63
+                        canoValueTop = canoLocation[1][0]+40
                         canoLocalizado = True
-                        cv2.line(screen, (10,canoValueTop), (280,canoValueTop), (255,255,255), 1) 
-                        cv2.line(screen, (10,canoValueTop + 60), (280,canoValueTop + 60), (255,255,255), 1) 
                     except:
                         canoValueTop= 200
                     try:
-                        birdValue = birdLocation[1][0]
+                        birdValue = birdLocation[1][0] +10
+                        birdLozalizado = True
                     except:
                         birdValue = 0
+                    if(canoLocalizado and birdLozalizado):
+                        cv2.line(screen, (birdLocation[0][0],birdValue), (canoLocation[0][0]+30,canoValueTop+55), (0,255,255),2) 
                     cv2.imshow("Eye", screen)
                     cv2.waitKey(1)
                     if(not running):
                         reset(keyboard)
                         break
-                    if(canoLocalizado and canoValueTop < birdValue and canoValueTop + 60 > birdValue):
+                    if(canoLocalizado and canoValueTop < birdValue and canoValueTop + 110 > birdValue):
                         NN.fitness+=1
-                    NNInput = [birdValue, canoValueTop,canoValueTop+60]
+                    NNInput = [birdValue, canoValueTop+55]
                     prediction = NN.feedforward(NNInput)
                     if(prediction > 0.5):
                         jump(keyboard)
                     NN.fitness+=0.1
                     bestScore = NN.fitness if NN.fitness>bestScore else bestScore
-
                     
+                    if(shouldReset):
+                        run = False
+            if(shouldReset):
+    
+                g = Genetic(30,0.05,[2,3,1],2)
+                generation = 1
+                bestScore = 0
+                break
+        if(shouldReset):
+          shouldReset = False
+          reset(keyboard)
+          continue      
         g.evolve()
         generation+=1
 
