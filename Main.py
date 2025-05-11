@@ -20,7 +20,7 @@ def main():
     shape = [2, 4, 1]  # 2 entradas, 4 neurônios na camada oculta, 1 saída
     lowBound = 0
     highBound = 1.0
-    g = Genetic(10,0.05,shape,4,lowBound,highBound)
+    g = Genetic(30,0.05,shape,1,lowBound,highBound)
     meanLost = 0
     best_Score = float('-inf')
     best_NN = None
@@ -32,7 +32,7 @@ def main():
             if(nn.fitness> best_Score):
                 best_Score= nn.fitness
                 best_NN = copy.copy(nn)
-        meanLost/=10
+        meanLost/=30
         g.evolve()
 
     print(f'O melhor score foi: {best_Score}, estamos esperando ')
