@@ -1,6 +1,10 @@
 from Genetic import Genetic
 import copy
 import numpy as np
+from Selection import SelectionByTournament
+from CrossOver import CrossOverBLX
+from Mutations import GaussianMutation
+from Neural import NeuralNetwork
 def evaluate_network(nn, X, y):
     predictions = []
     for input_data, target in zip(X, y):
@@ -18,13 +22,14 @@ def main():
     #np.random.seed(42)
     # Configuração da rede neural
     shape = [2, 4, 1]  # 2 entradas, 4 neurônios na camada oculta, 1 saída
-    lowBound = 0
+    lowBound = -1
     highBound = 1.0
-    g = Genetic(30,0.05,shape,1,lowBound,highBound)
+    g = Genetic(30,0.05,shape,15,lowBound,highBound,True,selection_strategy=SelectionByTournament,crossover_strategy=CrossOverBLX,mutation_strategy=GaussianMutation)
     meanLost = 0
+    """
     best_Score = float('-inf')
     best_NN = None
-    for i in range(10000):
+    for i in range(100):
         meanLost = 0
         for nn in g.populationList: 
             nn.fitness = evaluate_network(nn, X, y)
@@ -41,7 +46,10 @@ def main():
         print('[',end='')
         print(f'{best_NN.feedforward(input_data.reshape(1, -1))} ',end='')
     print(']')
-
+    """
+    rede = NeuralNetwork(shape,-1.0,1.0)
+    rede.train(X,y,100000,0.01)
+    print(rede.feedforward(X))
 
 
 if __name__ == "__main__":
