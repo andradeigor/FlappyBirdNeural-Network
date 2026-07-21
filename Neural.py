@@ -17,7 +17,7 @@ class NeuralNetwork:
         currentInput = input
         for i in range(len(self.Layers)):
             currentLayer = self.Layers[i]
-            currentLayer.foward(currentInput)
+            currentLayer.forward(currentInput)
             currentLayer.tanh(currentLayer.output)
             currentInput = currentLayer.result
         return sum(currentInput)
@@ -28,7 +28,7 @@ class Layer:
         if(nInput==None or nNeurons==None): return
         self.weights = np.array(0.2 * np.random.randn(nNeurons,nInput))
         self.biases = np.array(0.2 * np.random.randn(1,nNeurons))
-    def foward(self, input):
+    def forward(self, input):
         self.output = np.dot(input,self.weights.T) + self.biases
 
     def tanh(self,values):
